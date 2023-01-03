@@ -25,7 +25,7 @@ export default function Map() {
     drawLine();
   };
   const imageSrc =
-      "https://s3.us-west-2.amazonaws.com/secure.notion-static.com/f72438ab-ed3c-4917-b3dd-2760a05b4671/markerimg.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20221212%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20221212T144903Z&X-Amz-Expires=86400&X-Amz-Signature=66faad2fba66d28ce36c1b0bf55b062183238e77d878603993f16cac2b17e9bf&X-Amz-SignedHeaders=host&response-content-disposition=filename%3D%22markerimg.png%22&x-id=GetObject", // 마커이미지의 주소입니다
+      "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_num.png?alt=media", // 마커이미지의 주소입니다
     imageSize = new kakao.maps.Size(36, 36), // 마커이미지의 크기입니다
     imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
