@@ -1,12 +1,14 @@
 import React, { useEffect, useRef } from "react";
 import { markerList } from "../../dummydata/markers";
-
+import simbol_marker from '../../assets/simbol_marker.png';
+import simbol_num from '../../assets/simbol_num.png';
 const { kakao } = window;
 
 export default function Map() {
   const ref = useRef();
   let map = null;
-
+  const pageType = 'main';
+  // let marker = null;
   useEffect(() => {
     if (ref.current) {
       mapScript();
@@ -21,11 +23,13 @@ export default function Map() {
     };
     map = new kakao.maps.Map(container, options);
     drawMarker();
-    drawCustomOverlay();
-    drawLine();
+    if(pageType === 'schedule') {
+      drawCustomOverlay();
+      drawLine();
+    }
   };
-  const imageSrc =
-      "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_num.png?alt=media", // 마커이미지의 주소입니다
+  const imageSrc = pageType === 'main' ? simbol_marker : simbol_num,
+       // "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_marker.png?alt=media",
     imageSize = new kakao.maps.Size(36, 36), // 마커이미지의 크기입니다
     imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
@@ -36,10 +40,10 @@ export default function Map() {
     imageOption
   );
   const drawMarker = () => {
-    console.log(markerList);
+    let marker;
     markerList.forEach((el) => {
       // 마커를 생성합니다
-      new kakao.maps.Marker({
+      marker = new kakao.maps.Marker({
         //마커가 표시 될 지도
         map: map,
         //마커가 표시 될 위치
@@ -48,6 +52,21 @@ export default function Map() {
         title: el.title,
         image: markerImage,
       });
+      kakao.maps.event.addListener(marker, 'click', handler(marker));
+      function handler(marker) {
+        return function(){
+          console.log(marker);
+          window.addEventListener('message', handler);
+          return () => {
+            window.removeEventListener('message', handler)
+          }
+        }
+        // return () => {alert(JSON.stringify(e.data))}
+        // window.addEventListener('message', handler);
+        // return () => {
+        //   window.removeEventListener('message', handler)
+        // }
+      }
     });
   };
   const drawCustomOverlay = () => {
@@ -85,10 +104,23 @@ export default function Map() {
       });
     }
   };
+  const markerClick = (marker) => {
+    // 마커에 클릭이벤트를 등록합니다
+    kakao.maps.event.addListener(marker, 'click', handler);
+    const handler = (e) => {
+      console.log(JSON.stringify(e.data))
+      // alert(JSON.stringify(e.data))
+    //  }
+     window.addEventListener('message', handler);
+     return () => {
+       window.removeEventListener('message', handler)
+     }}
+  };
   return (
     <div
       ref={ref}
       style={{
+        position: "fixed",
         width: "100vw",
         height: "100vh",
       }}
