@@ -55,16 +55,19 @@ export default function Map() {
       kakao.maps.event.addListener(marker, 'click', handler(marker));
       function handler(marker) {
         return function(){
-          console.log(marker);
-          window.addEventListener('message', handler);
-          return () => {
-            window.removeEventListener('message', handler)
-          }
+            window.ReactNativeWebView.postMessage(
+            JSON.stringify({
+              type : 'test'
+            })
+          )
         }
-        // return () => {alert(JSON.stringify(e.data))}
-        // window.addEventListener('message', handler);
-        // return () => {
-        //   window.removeEventListener('message', handler)
+        
+        // return function(){
+        //   console.log(marker);
+        //   window.addEventListener('message', handler);
+        //   return () => {
+        //     window.removeEventListener('message', handler)
+        //   }
         // }
       }
     });
@@ -120,9 +123,9 @@ export default function Map() {
     <div
       ref={ref}
       style={{
-        position: "fixed",
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
+        position: 'absolute',
       }}
     />
   );

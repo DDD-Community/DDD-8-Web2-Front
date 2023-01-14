@@ -13,7 +13,9 @@ function KakaoMap() {
   //   }
   // }, []);
   return (
-    <div className="kakaomap">
+    <div id="map" style={{
+      position: 'static'
+    }}>
       <Map />
     </div>
   );
