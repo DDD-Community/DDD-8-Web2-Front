@@ -1,17 +1,36 @@
 import React, { useEffect, useRef } from "react";
 import { markerList } from "../../dummydata/markers";
+import { WebViewMessage } from "./messageRN.js";
 import simbol_marker from '../../assets/simbol_marker.png';
 import simbol_num from '../../assets/simbol_num.png';
+import recommend_pin from '../../assets/recommend_pin.png';
 const { kakao } = window;
 
 export default function Map() {
   const ref = useRef();
   let map = null;
+  
+  
+  // const pagetypeCheck = () => {
+
+  // };
   const pageType = 'main';
   // let marker = null;
   useEffect(() => {
     if (ref.current) {
       mapScript();
+      const onMessageHandler = (e) => {
+        // const event = JSON.parse(e.data)
+        // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
+        alert('rr'+e)
+      }
+        /** android */
+		// document.addEventListener('message', listener);
+		/** ios */
+		window.addEventListener('message', onMessageHandler);
+    return () => {
+      window.removeEventListener('message', onMessageHandler)
+    }
     }
   }, []);
 
@@ -28,7 +47,7 @@ export default function Map() {
       drawLine();
     }
   };
-  const imageSrc = pageType === 'main' ? simbol_marker : simbol_num,
+  const imageSrc = pageType === 'main' ? simbol_marker : pageType === 'search' ? recommend_pin : simbol_num,
        // "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_marker.png?alt=media",
     imageSize = new kakao.maps.Size(36, 36), // 마커이미지의 크기입니다
     imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -52,13 +71,17 @@ export default function Map() {
         title: el.title,
         image: markerImage,
       });
-      kakao.maps.event.addListener(marker, 'click', handler(marker));
+      kakao.maps.event.addListener(marker, 'click', handler(el));
       function handler(marker) {
-        return function(){
+        return ()=>{
+          console.log('fuck',marker)
             window.ReactNativeWebView.postMessage(
-            JSON.stringify({
-              type : 'test'
-            })
+            // JSON.stringify({
+            //   title : marker.title,
+            //   lat : marker.lat,
+            //   lng : marker.lng
+            // })
+            JSON.stringify(el)
           )
         }
         
@@ -107,18 +130,18 @@ export default function Map() {
       });
     }
   };
-  const markerClick = (marker) => {
-    // 마커에 클릭이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', handler);
-    const handler = (e) => {
-      console.log(JSON.stringify(e.data))
-      // alert(JSON.stringify(e.data))
-    //  }
-     window.addEventListener('message', handler);
-     return () => {
-       window.removeEventListener('message', handler)
-     }}
-  };
+  // const markerClick = (marker) => {
+  //   // 마커에 클릭이벤트를 등록합니다
+  //   kakao.maps.event.addListener(marker, 'click', handler);
+  //   const handler = (e) => {
+  //     console.log(JSON.stringify(e.data))
+  //     // alert(JSON.stringify(e.data))
+  //   //  }
+  //    window.addEventListener('message', handler);
+  //    return () => {
+  //      window.removeEventListener('message', handler)
+  //    }}
+  // };
   return (
     <div
       ref={ref}
