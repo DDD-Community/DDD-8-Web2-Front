@@ -1,31 +1,29 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef,useState } from "react";
 import { markerList } from "../../dummydata/markers";
 import { WebViewMessage } from "./messageRN.js";
+import LocationDetail from "../../components/locationDetail.js";
 import simbol_marker from '../../assets/simbol_marker.png';
 import simbol_num from '../../assets/simbol_num.png';
 import recommend_pin from '../../assets/recommend_pin.png';
 const { kakao } = window;
 
 export default function Map() {
+  const [data, setData] = useState({});
   const ref = useRef();
   let map = null;
-  
-  
   // const pagetypeCheck = () => {
 
   // };
-  const pageType = 'main';
+  const pageType = 'search';
   // let marker = null;
   useEffect(() => {
     if (ref.current) {
       mapScript();
       const onMessageHandler = (e) => {
-        // const event = JSON.parse(e.data)
+        const event = e.data;
         // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
-        alert('rr'+e)
+        e && alert('앱에서 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
       }
-        /** android */
-		// document.addEventListener('message', listener);
 		/** ios */
 		window.addEventListener('message', onMessageHandler);
     return () => {
@@ -74,24 +72,11 @@ export default function Map() {
       kakao.maps.event.addListener(marker, 'click', handler(el));
       function handler(marker) {
         return ()=>{
-          console.log('fuck',marker)
-            window.ReactNativeWebView.postMessage(
-            // JSON.stringify({
-            //   title : marker.title,
-            //   lat : marker.lat,
-            //   lng : marker.lng
-            // })
+        setData(marker);
+          window.ReactNativeWebView.postMessage(
             JSON.stringify(el)
           )
         }
-        
-        // return function(){
-        //   console.log(marker);
-        //   window.addEventListener('message', handler);
-        //   return () => {
-        //     window.removeEventListener('message', handler)
-        //   }
-        // }
       }
     });
   };
@@ -150,6 +135,8 @@ export default function Map() {
         height: "100%",
         position: 'absolute',
       }}
-    />
+    >
+      <LocationDetail data={data}/>
+    </div>
   );
 }
