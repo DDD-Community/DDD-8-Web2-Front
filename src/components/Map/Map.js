@@ -1,6 +1,5 @@
 import React, { useEffect, useRef,useState } from "react";
 import { markerList } from "../../dummydata/markers";
-import { WebViewMessage } from "./messageRN.js";
 import LocationDetail from "../../components/locationDetail.js";
 import simbol_marker from '../../assets/simbol_marker.png';
 import simbol_num from '../../assets/simbol_num.png';
@@ -23,6 +22,7 @@ export default function Map() {
         const event = e.data;
         // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
         e && alert('앱에서 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
+        event.type === 'onInit' && console.log(event.type )
       }
 		/** ios */
 		window.addEventListener('message', onMessageHandler);
@@ -127,16 +127,29 @@ export default function Map() {
   //      window.removeEventListener('message', handler)
   //    }}
   // };
-  return (
-    <div
-      ref={ref}
-      style={{
-        width: "100%",
-        height: "100%",
-        position: 'absolute',
-      }}
-    >
+  if(data.title){
+    return (
+      <div
+        ref={ref}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: 'absolute',
+        }}
+      >
       <LocationDetail data={data}/>
     </div>
-  );
+    ); 
+  }else
+    return (
+      <div
+        ref={ref}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: 'absolute',
+        }}
+      >
+      </div>
+    );
 }

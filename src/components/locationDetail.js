@@ -1,37 +1,28 @@
 import React, { useEffect, useRef } from "react";
-// import "../main.scss";
+import {styles} from '../mainStyle.js';
+import api from '../api.js';
+// import "../main.css";
 // import simbol_num from '../../assets/simbol_num.png';
 
 export default function location({data}) {
-const ref = useRef();
-  useEffect(() => {
-    console.log('dd')
-    console.log(data)
+  const ref = useRef();
+    useEffect(() => {
+        api.getInfo('3fa85f64-5717-4562-b3fc-2c963f66afa6');
+        // api.getInfo(placeId);
+        console.log(data)
 
-  }, []);
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: 'relative',
-        zIndex: 2,
-        width: '343px',
-        height: '100px',
-        left: '16px',
-        top: '530px',
-        background: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: '20px',
-      }}>
-        <div><h2 style={{
-            fontSize: '18px',
-            margin: '16px'
-        }}>{data.title ? data.title : '기본값'}</h2>
-        <p>카테고리</p>            
-
+    }, []);
+    return (
+      <div
+          ref={ref}
+          style={styles.locationInfo}>
+            <p style={styles.locationInfoTitle}>
+              <strong>{data.title ? data.title : '기본값'}</strong>
+              <span style={styles.locationCatagory}>{data.title}</span>
+            </p>
+            <p style={styles.locationAdress}>{data.adress}</p>            
+            <p style={styles.locationTel}>{data.telnum}</p>            
         </div>
+    )
         
-        <p>서울 ㅅ강남구</p>            
-        <p>전화번호</p>            
-    </div>
-  );
 }
