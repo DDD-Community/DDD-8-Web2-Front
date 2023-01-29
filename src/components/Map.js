@@ -1,28 +1,31 @@
 import React, { useEffect, useRef,useState } from "react";
-import { markerList } from "../../dummydata/markers";
-import LocationDetail from "../../components/locationDetail.js";
-import simbol_marker from '../../assets/simbol_marker.png';
-import simbol_num from '../../assets/simbol_num.png';
-import recommend_pin from '../../assets/recommend_pin.png';
+import { markerList } from "../dummydata/markers";
+import LocationDetail from "./locationDetail.js";
+import simbol_marker from '../assets/simbol_marker.png';
+import simbol_num from '../assets/simbol_num.png';
+import recommend_pin from '../assets/recommend_pin.png';
+import {  useLocation } from "react-router-dom";
 const { kakao } = window;
 
 export default function Map() {
   const [data, setData] = useState({});
   const ref = useRef();
+  const { pathname } = useLocation();
   let map = null;
-  // const pagetypeCheck = () => {
+  // const pathnameCheck = () => {
 
   // };
-  const pageType = 'search';
   // let marker = null;
   useEffect(() => {
     if (ref.current) {
       mapScript();
+    console.log(pathname)
       const onMessageHandler = (e) => {
         const event = e.data;
+        console.log(event)
         // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
-        e && alert('앱에서 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
-        event.type === 'onInit' && console.log(event.type )
+        alert('앱에서--- 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
+        event.type === 'onInit' && alert(event.type )
       }
 		/** ios */
 		window.addEventListener('message', onMessageHandler);
@@ -40,12 +43,12 @@ export default function Map() {
     };
     map = new kakao.maps.Map(container, options);
     drawMarker();
-    if(pageType === 'schedule') {
+    if(pathname === '/schedule') {
       drawCustomOverlay();
       drawLine();
     }
   };
-  const imageSrc = pageType === 'main' ? simbol_marker : pageType === 'search' ? recommend_pin : simbol_num,
+  const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin,
        // "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_marker.png?alt=media",
     imageSize = new kakao.maps.Size(36, 36), // 마커이미지의 크기입니다
     imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
@@ -115,18 +118,6 @@ export default function Map() {
       });
     }
   };
-  // const markerClick = (marker) => {
-  //   // 마커에 클릭이벤트를 등록합니다
-  //   kakao.maps.event.addListener(marker, 'click', handler);
-  //   const handler = (e) => {
-  //     console.log(JSON.stringify(e.data))
-  //     // alert(JSON.stringify(e.data))
-  //   //  }
-  //    window.addEventListener('message', handler);
-  //    return () => {
-  //      window.removeEventListener('message', handler)
-  //    }}
-  // };
   if(data.title){
     return (
       <div

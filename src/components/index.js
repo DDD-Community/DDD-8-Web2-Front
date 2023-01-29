@@ -1,2 +1,2 @@
-export { Map } from "./Map/Map";
-export {location} from "./locationDetail";
+// export { Map } from "./Map.js";
+// export {location} from "./locationDetail.js";
