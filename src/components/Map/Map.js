@@ -16,19 +16,25 @@ export default function Map() {
   const pageType = 'search';
   // let marker = null;
   useEffect(() => {
-    if (ref.current) {
-      mapScript();
-      const onMessageHandler = (e) => {
-        const event = e.data;
-        // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
-        e && alert('앱에서 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
-        event.type === 'onInit' && console.log(event.type )
+    const onMessageHandler = (e) => {
+      // 앱으로 부터 온 메세지
+      const event = e.data;
+      if (event.type === "onInit") {
+        alert('accessToken: ' + event.data.accessToken);
       }
+      if (event.type === "onSelectDay") {
+        alert('selectedDay' + event.data.selectedDay);
+      }
+    }
+      window.addEventListener("message", onMessageHandler);
+
+      // 앱에 메세지 보내는 방법
+      window.ReactNativeWebView?.postMessage("onLoad");
+      mapScript();
+   
 		/** ios */
-		window.addEventListener('message', onMessageHandler);
     return () => {
       window.removeEventListener('message', onMessageHandler)
-    }
     }
   }, []);
 
