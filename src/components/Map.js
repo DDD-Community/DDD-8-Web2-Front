@@ -1,14 +1,14 @@
 import React, { useEffect, useRef,useState } from "react";
 import { markerList } from "../dummydata/markers";
-import LocationDetail from "./locationDetail.js";
+import api from '../api.js';
 import simbol_marker from '../assets/simbol_marker.png';
 import simbol_num from '../assets/simbol_num.png';
 import recommend_pin from '../assets/recommend_pin.png';
 import {  useLocation } from "react-router-dom";
 const { kakao } = window;
 
-export default function Map() {
-  const [data, setData] = useState({});
+export default function Map({parentFunction,getAccessToken}) {
+  // const [data, setData] = useState({});
   const ref = useRef();
   const { pathname } = useLocation();
   let map = null;
@@ -18,17 +18,33 @@ export default function Map() {
   // let marker = null;
   useEffect(() => {
     if (ref.current) {
-      mapScript();
-    console.log(pathname)
+      api.getPlaceregions({
+        region:'%EC%A0%84%EA%B5%AD',
+        page:0,
+        size:1
+      })
       const onMessageHandler = (e) => {
+        // 앱으로 부터 온 메세지
         const event = e.data;
-        console.log(event)
-        // window.ReactNativeWebView.postMessage(JSON.stringify({ event: e }))
-        alert('앱에서--- 주는 메세지타입:'+ event.type+'selectedDay='+ event.data.selectedDay)
-        event.type === 'onInit' && alert(event.type )
+        if (event.type === "onInit") {
+          api.getPlaceregions({
+            region:'%EC%A0%84%EA%B5%AD',
+            page:0,
+            size:1
+          })
+          // getAccessToken(event.data.accessToken)
+          alert('accessToken: ' + event.data.accessToken);
+        }
+        if (event.type === "onSelectDay") {
+          alert('selectedDay' + event.data.selectedDay);
+        }
       }
-		/** ios */
-		window.addEventListener('message', onMessageHandler);
+        window.addEventListener("message", onMessageHandler);
+  
+        // // 앱에 메세지 보내는 방법
+        // window.ReactNativeWebView?.postMessage("onLoad");
+        mapScript();
+  
     return () => {
       window.removeEventListener('message', onMessageHandler)
     }
@@ -75,10 +91,11 @@ export default function Map() {
       kakao.maps.event.addListener(marker, 'click', handler(el));
       function handler(marker) {
         return ()=>{
-        setData(marker);
-          window.ReactNativeWebView.postMessage(
-            JSON.stringify(el)
-          )
+          parentFunction(marker)
+          // setData(marker);
+          // window.ReactNativeWebView.postMessage(
+          //   JSON.stringify(el)
+          // )
         }
       }
     });
@@ -118,20 +135,20 @@ export default function Map() {
       });
     }
   };
-  if(data.title){
-    return (
-      <div
-        ref={ref}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: 'absolute',
-        }}
-      >
-      <LocationDetail data={data}/>
-    </div>
-    ); 
-  }else
+  // if(data.title){
+  //   return (
+  //     <div
+  //       ref={ref}
+  //       style={{
+  //         width: "100%",
+  //         height: "100%",
+  //         position: 'absolute',
+  //       }}
+  //     >
+  //     {/* <LocationDetail data={data}/> */}
+  //   </div>
+  //   ); 
+  // }else
     return (
       <div
         ref={ref}

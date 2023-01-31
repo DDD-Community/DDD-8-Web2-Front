@@ -9,15 +9,19 @@ export default function location({data}) {
     useEffect(() => {
         // api.getInfo('3fa85f64-5717-4562-b3fc-2c963f66afa6');
         // api.getInfo(placeId);
-        console.log(data)
-
+        // 앱에 메세지 보내는 방법
     }, []);
+    const MessagetoRn = () => {
+      window.ReactNativeWebView?.postMessage("onLoad");
+      console.log('postMessage')
+    }
+    if(data.title)
     return (
-    <div
+    <div onClick={MessagetoRn}
         ref={ref}
         style={styles.locationInfo}>
             <p style={styles.locationInfoTitle}>
-            <strong>{data.title ? data.title : '기본값'}</strong>
+            <strong>{data.title}</strong>
             <span style={styles.locationCatagory}>{data.title}</span>
             </p>
             <p style={styles.locationAdress}>{data.adress}</p>            

@@ -1,22 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import Map from "../components/Map.js";
+import LocationDetail from "../components/locationDetail.js";
 
+const accesstToken = null;
 function KakaoMap() {
-  // useEffect(() => {
-  //   const handler = (e) => {
-  //     console.log(e)
-  //    alert(JSON.stringify(e.data))
-  //   }
-  //   window.addEventListener('message', handler);
-  //   return () => {
-  //     window.removeEventListener('message', handler)
-  //   }
-  // }, []);
+  const [data, setData] = useState({});
+  const parentFunction = (location) => {
+    setData(location)
+  } 
+  const getAccessToken = (accesstoken) => {
+    accessToken = accesstoken;
+  } 
+  useEffect(() => {
+    console.log(accesstToken)
+  }, []);
   return (
     <div id="map" style={{
-      position: 'static'
+      // position: 'static'
     }}>
-      <Map />
+      <Map parentFunction = {parentFunction} getAccessToken={getAccessToken}/>
+      <LocationDetail data={data}/>
+
     </div>
   );
 }
