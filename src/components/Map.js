@@ -16,6 +16,7 @@ export default function Map({parentFunction,getAccessToken}) {
 
   // };
   const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin;
+  const imageSize = pathname === '/schedule' ?  new kakao.maps.Size(36,36) : new kakao.maps.Size(30,30);
   let selectedMarker = null;
   
   useEffect(() => {
@@ -77,9 +78,9 @@ export default function Map({parentFunction,getAccessToken}) {
         position: new kakao.maps.LatLng(el.lat, el.lng),
         //마커에 hover시 나타날 title
         title: el.title,
-        image: createMarkerImage(new kakao.maps.Size(30, 30)),
+        image: createMarkerImage(imageSize),
       });
-      kakao.maps.event.addListener(marker, 'click', handler(marker,el));
+      pathname !== '/schedule' && kakao.maps.event.addListener(marker, 'click', handler(marker,el));
       function handler(marker,el) {
         return ()=>{
           if (!selectedMarker || selectedMarker !== marker) {
@@ -87,7 +88,7 @@ export default function Map({parentFunction,getAccessToken}) {
             // 현재 클릭된 마커 사이즈 변경합니다
             marker.setImage(createMarkerImage(new kakao.maps.Size(36,36)));
           }
-        // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
+          // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
           selectedMarker = marker;
           parentFunction(el)
           // setData(marker);
