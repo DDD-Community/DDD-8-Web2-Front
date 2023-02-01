@@ -3,7 +3,10 @@ import LocationDetail from "../components/locationDetail";
 import Map from "../components/Map.js";
 
 function MapSearch() {
-  const [data] = useState({});
+  const [data, setData] = useState({});
+  const parentFunction = (location) => {
+    setData(location)
+  } 
   // useEffect(() => {
   //   const handler = (e) => {
   //     console.log(e)
@@ -18,9 +21,8 @@ function MapSearch() {
       <div id="map" style={{
         position: 'static'
       }}>
-        <Map/>
         <button style={{
-          zIndex:1,
+          zIndex:2,
           position:'absolute',
           backgroundColor:'#6147ff',
           borderRadius: '50px',
@@ -34,6 +36,8 @@ function MapSearch() {
           fontSize: '16px',
           color: '#ffffff'
         }}>검색결과 더보기</button>
+        <Map parentFunction = {parentFunction}/>
+        <LocationDetail data={data}/>
       </div>
     );
   }

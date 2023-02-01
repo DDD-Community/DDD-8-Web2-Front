@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import {styles} from '../mainStyle.js';
+import bookOn from '../assets/bookmark_on.png';
+import bookOff from '../assets/bookmark_off.png';
 import api from '../api.js';
 // import "../main.css";
-// import simbol_num from '../../assets/simbol_num.png';
 
 export default function location({data}) {
   const ref = useRef();
@@ -25,8 +26,9 @@ export default function location({data}) {
             <span style={styles.locationCatagory}>{data.title}</span>
             </p>
             <p style={styles.locationAdress}>{data.adress}</p>            
-            <p style={styles.locationTel}>{data.telnum}</p>            
-        </div>
+            <p style={styles.locationTel}>{data.telnum}</p>  
+            <a type="button" style={styles.bookmarkTag}><img src={data.bookmarkTF ? bookOn : bookOff} style={{width: '48px', height: '48px'}}/></a>          
+    </div>
     );
     
         

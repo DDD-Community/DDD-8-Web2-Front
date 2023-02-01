@@ -1,7 +1,7 @@
 import React, { useEffect, useRef,useState } from "react";
 import { markerList } from "../dummydata/markers";
 import api from '../api.js';
-import simbol_marker from '../assets/simbol_marker.png';
+// import simbol_marker from '../assets/simbol_marker.png';
 import simbol_num from '../assets/simbol_num.png';
 import recommend_pin from '../assets/recommend_pin.png';
 import {  useLocation } from "react-router-dom";
@@ -15,7 +15,9 @@ export default function Map({parentFunction,getAccessToken}) {
   // const pathnameCheck = () => {
 
   // };
-  // let marker = null;
+  const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin;
+  let selectedMarker = null;
+  
   useEffect(() => {
     if (ref.current) {
       api.getPlaceregions({
@@ -64,17 +66,6 @@ export default function Map({parentFunction,getAccessToken}) {
       drawLine();
     }
   };
-  const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin,
-       // "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_marker.png?alt=media",
-    imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
-    imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-  const markerImage = new kakao.maps.MarkerImage(
-    imageSrc,
-    imageSize,
-    imageOption
-  );
   const drawMarker = () => {
     let marker;
     markerList.forEach((el) => {
@@ -86,15 +77,19 @@ export default function Map({parentFunction,getAccessToken}) {
         position: new kakao.maps.LatLng(el.lat, el.lng),
         //마커에 hover시 나타날 title
         title: el.title,
-        image: markerImage,
+        image: createMarkerImage(new kakao.maps.Size(30, 30)),
       });
-      kakao.maps.event.addListener(marker, 'click', handler(el));
-      function handler(marker) {
-        new kakao.maps.Size(36, 36)
+      kakao.maps.event.addListener(marker, 'click', handler(marker,el));
+      function handler(marker,el) {
         return ()=>{
-          console.log(marker.id)
-
-          parentFunction(marker)
+          if (!selectedMarker || selectedMarker !== marker) {
+            !!selectedMarker && selectedMarker.setImage(createMarkerImage(new kakao.maps.Size(30,30)));
+            // 현재 클릭된 마커 사이즈 변경합니다
+            marker.setImage(createMarkerImage(new kakao.maps.Size(36,36)));
+          }
+        // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
+          selectedMarker = marker;
+          parentFunction(el)
           // setData(marker);
           // window.ReactNativeWebView.postMessage(
           //   JSON.stringify(el)
@@ -103,6 +98,13 @@ export default function Map({parentFunction,getAccessToken}) {
       }
     });
   };
+const createMarkerImage = (markerSize)=> {
+  let markerImage = new kakao.maps.MarkerImage(
+    imageSrc, // 스프라이트 마커 이미지 URL
+    markerSize, // 마커의 크기
+  );
+  return markerImage;
+  }
   const drawCustomOverlay = () => {
     markerList.forEach((el, index) => {
       const content =
@@ -138,20 +140,6 @@ export default function Map({parentFunction,getAccessToken}) {
       });
     }
   };
-  // if(data.title){
-  //   return (
-  //     <div
-  //       ref={ref}
-  //       style={{
-  //         width: "100%",
-  //         height: "100%",
-  //         position: 'absolute',
-  //       }}
-  //     >
-  //     {/* <LocationDetail data={data}/> */}
-  //   </div>
-  //   ); 
-  // }else
     return (
       <div
         ref={ref}
