@@ -66,7 +66,7 @@ export default function Map({parentFunction,getAccessToken}) {
   };
   const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin,
        // "https://firebasestorage.googleapis.com/v0/b/rn-photo-4136c.appspot.com/o/simbol_marker.png?alt=media",
-    imageSize = new kakao.maps.Size(36, 36), // 마커이미지의 크기입니다
+    imageSize = new kakao.maps.Size(30, 30), // 마커이미지의 크기입니다
     imageOption = {}; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
@@ -90,7 +90,10 @@ export default function Map({parentFunction,getAccessToken}) {
       });
       kakao.maps.event.addListener(marker, 'click', handler(el));
       function handler(marker) {
+        new kakao.maps.Size(36, 36)
         return ()=>{
+          console.log(marker.id)
+
           parentFunction(marker)
           // setData(marker);
           // window.ReactNativeWebView.postMessage(
