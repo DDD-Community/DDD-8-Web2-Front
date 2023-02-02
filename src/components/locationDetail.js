@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import {styles} from '../mainStyle.js';
 import bookOn from '../assets/bookmark_on.png';
 import bookOff from '../assets/bookmark_off.png';
-import api from '../api.js';
+import api from '../api/api.js';
 // import "../main.css";
 
 export default function location({data}) {
@@ -12,20 +12,20 @@ export default function location({data}) {
         // api.getInfo(placeId);
         // 앱에 메세지 보내는 방법
     }, []);
-    const MessagetoRn = () => {
-      window.ReactNativeWebView?.postMessage("onLoad");
+    const goLocaionDetail = () => {
+      window.ReactNativeWebView?.postMessage(JSON.stringify({type:"goLocaionDetail",data:data}));
       console.log('postMessage')
     }
-    if(data.title)
+    if(data.name)
     return (
-    <div onClick={MessagetoRn}
+    <div onClick={goLocaionDetail}
         ref={ref}
         style={styles.locationInfo}>
             <p style={styles.locationInfoTitle}>
-            <strong>{data.title}</strong>
-            <span style={styles.locationCatagory}>{data.title}</span>
+            <strong>{data.name}</strong>
+            <span style={styles.locationCatagory}>{data.category}</span>
             </p>
-            <p style={styles.locationAdress}>{data.adress}</p>            
+            <p style={styles.locationAdress}>{data.address}</p>            
             <p style={styles.locationTel}>{data.telnum}</p>  
             <a type="button" style={styles.bookmarkTag}><img src={data.bookmarkTF ? bookOn : bookOff} style={{width: '48px', height: '48px'}}/></a>          
     </div>

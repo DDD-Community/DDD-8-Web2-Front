@@ -1,10 +1,10 @@
 import React, { useEffect, useRef,useState } from "react";
-import { markerList } from "../dummydata/markers";
-import api from '../api.js';
+// import { markerList } from "../dummydata/markers";
+import api from '../api/api.js';
 // import simbol_marker from '../assets/simbol_marker.png';
 import simbol_num from '../assets/simbol_num.png';
 import recommend_pin from '../assets/recommend_pin.png';
-import {  useLocation } from "react-router-dom";
+import {  json, useLocation } from "react-router-dom";
 const { kakao } = window;
 
 export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
@@ -12,30 +12,29 @@ export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
   const ref = useRef();
   const { pathname } = useLocation();
   let map = null;
-  // const pathnameCheck = () => {
-
-  // };
+  let markerList = null;
   const imageSrc = pathname === '/schedule' ?  simbol_num : recommend_pin;
   const imageSize = pathname === '/schedule' ?  new kakao.maps.Size(36,36) : new kakao.maps.Size(30,30);
   let selectedMarker = null;
   
   useEffect(() => {
     if (ref.current) {
-      api.getPlaceregions({
-        region:'%EC%A0%84%EA%B5%AD',
-        page:0,
-        size:1
-      })
+      mapScript();
       const onMessageHandler = (e) => {
         // 앱으로 부터 온 메세지
 
-        if (e.data &&typeof e.data.type ==='string' && typeof e.data.data ==="object") {
-          onReceiveMessage(e.data);
+        if (e.data &&  e.data.type === "OnResPlacesRegions"&&typeof e.data.type ==='string' && typeof e.data.data ==="object") {
+          // onReceiveMessage(e.data);
+          // alert(JSON.stringify(e.data.data.placeInRegionResponses) +  typeof(e.data.data.placeInRegionResponses))
+          markerList = e.data.data.placeInRegionResponses;
+          drawMarker();
         }
+        // if (e.data &&typeof e.data.type ==='string') {
+        //   onReceiveMessage(e.data);
+        // }
       }
         window.addEventListener("message", onMessageHandler);
-        window.ReactNativeWebView?.postMessage("onLoad");
-        mapScript();
+        window.ReactNativeWebView?.postMessage(JSON.stringify({type:"onLoad",data:null}));
     return () => {
       window.removeEventListener('message', onMessageHandler)
     }
@@ -45,11 +44,11 @@ export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
   const mapScript = () => {
     const container = ref.current;
     const options = {
-      center: new kakao.maps.LatLng(37.624915253753194, 127.15122688059974),
-      level: 3,
+      center: new kakao.maps.LatLng(37.4822, 127.03684),
+      level: 5,
     };
     map = new kakao.maps.Map(container, options);
-    drawMarker();
+    // drawMarker();
     if(pathname === '/schedule') {
       drawCustomOverlay();
       drawLine();
@@ -63,20 +62,21 @@ export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
         //마커가 표시 될 지도
         map: map,
         //마커가 표시 될 위치
-        position: new kakao.maps.LatLng(el.lat, el.lng),
+        position: new kakao.maps.LatLng(el.location.latitude, el.location.longitude),
         //마커에 hover시 나타날 title
-        title: el.title,
+        title: el.name,
         image: createMarkerImage(imageSize),
       });
       pathname !== '/schedule' && kakao.maps.event.addListener(marker, 'click', handler(marker,el));
       function handler(marker,el) {
         return ()=>{
+          window.ReactNativeWebView?.postMessage(JSON.stringify({type:"markerClick",data:el}));
           if (!selectedMarker || selectedMarker !== marker) {
             !!selectedMarker && selectedMarker.setImage(createMarkerImage(new kakao.maps.Size(30,30)));
             // 현재 클릭된 마커 사이즈 변경합니다
             marker.setImage(createMarkerImage(new kakao.maps.Size(36,36)));
           }
-          // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다
+          // 클릭된 마커를 현재 클릭된 마커 객체로 설정합니다\
           selectedMarker = marker;
           parentFunction(el)
           // setData(marker);
@@ -102,8 +102,8 @@ const createMarkerImage = (markerSize)=> {
         "</span>";
       new kakao.maps.CustomOverlay({
         map: map,
-        position: new kakao.maps.LatLng(el.lat, el.lng),
-        title: el.title,
+        position: new kakao.maps.LatLng(el.location.latitude, el.location.longitude),
+        title: el.name,
         content: content,
         // image: markerImage,
       });
@@ -112,10 +112,10 @@ const createMarkerImage = (markerSize)=> {
   const line = new kakao.maps.Polyline();
   const drawLine = () => {
     for (let idx = 1; idx < markerList.length; idx++) {
-      console.log(markerList[idx].lat, markerList[idx].lng);
+      console.log(markerList[idx].location.latitude, markerList[idx].location.longitude);
       const linePath = [
-        new kakao.maps.LatLng(markerList[idx - 1].lat, markerList[idx - 1].lng),
-        new kakao.maps.LatLng(markerList[idx].lat, markerList[idx].lng),
+        new kakao.maps.LatLng(markerList[idx - 1].location.latitude, markerList[idx - 1].location.longitude),
+        new kakao.maps.LatLng(markerList[idx].location.latitude, markerList[idx].location.longitude),
       ];
       line.setPath(linePath);
       new kakao.maps.Polyline({
