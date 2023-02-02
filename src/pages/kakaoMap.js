@@ -14,11 +14,18 @@ function KakaoMap() {
   useEffect(() => {
     console.log(accesstToken)
   }, []);
+
+  const handleMessage = ({type, data}) => {
+    if (type === "OnResPlacesRegions"){
+      alert(JSON.stringify(data))
+    }
+  } 
+
   return (
     <div id="map" style={{
       // position: 'static'
     }}>
-      <Map parentFunction = {parentFunction} getAccessToken={getAccessToken}/>
+      <Map parentFunction = {parentFunction} getAccessToken={getAccessToken} onReceiveMessage={handleMessage}/>
       <LocationDetail data={data}/>
 
     </div>

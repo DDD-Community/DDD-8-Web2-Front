@@ -7,7 +7,7 @@ import recommend_pin from '../assets/recommend_pin.png';
 import {  useLocation } from "react-router-dom";
 const { kakao } = window;
 
-export default function Map({parentFunction,getAccessToken}) {
+export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
   // const [data, setData] = useState({});
   const ref = useRef();
   const { pathname } = useLocation();
@@ -28,26 +28,14 @@ export default function Map({parentFunction,getAccessToken}) {
       })
       const onMessageHandler = (e) => {
         // 앱으로 부터 온 메세지
-        const event = e.data;
-        if (event.type === "onInit") {
-          api.getPlaceregions({
-            region:'%EC%A0%84%EA%B5%AD',
-            page:0,
-            size:1
-          })
-          // getAccessToken(event.data.accessToken)
-          alert('accessToken: ' + event.data.accessToken);
-        }
-        if (event.type === "onSelectDay") {
-          alert('selectedDay' + event.data.selectedDay);
+
+        if (e.data &&typeof e.data.type ==='string' && typeof e.data.data ==="object") {
+          onReceiveMessage(e.data);
         }
       }
         window.addEventListener("message", onMessageHandler);
-  
-        // // 앱에 메세지 보내는 방법
-        // window.ReactNativeWebView?.postMessage("onLoad");
+        window.ReactNativeWebView?.postMessage("onLoad");
         mapScript();
-  
     return () => {
       window.removeEventListener('message', onMessageHandler)
     }
