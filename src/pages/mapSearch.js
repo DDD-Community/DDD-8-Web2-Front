@@ -7,16 +7,13 @@ function MapSearch() {
   const parentFunction = (location) => {
     setData(location)
   } 
-  // useEffect(() => {
-  //   const handler = (e) => {
-  //     console.log(e)
-  //    alert(JSON.stringify(e.data))
-  //   }
-  //   window.addEventListener('message', handler);
-  //   return () => {
-  //     window.removeEventListener('message', handler)
-  //   }
-  // }, []);
+
+  const handleMessage = ({type, data}) => {
+    if (type === "OnResPlacesSearch") {
+      alert(JSON.stringify(data));
+    }
+  }
+
     return(
       <div id="map" style={{
         position: 'static'
@@ -36,7 +33,7 @@ function MapSearch() {
           fontSize: '16px',
           color: '#ffffff'
         }}>검색결과 더보기</button>
-        <Map parentFunction = {parentFunction}/>
+        <Map parentFunction = {parentFunction} onReceiveMessage={handleMessage}/>
         <LocationDetail data={data}/>
       </div>
     );
