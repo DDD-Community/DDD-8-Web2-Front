@@ -25,8 +25,8 @@ export default function location({data}) {
             <strong>{data.name}</strong>
             <span style={styles.locationCatagory}>{data.category}</span>
             </p>
-            <p style={styles.locationAdress}>{data.address}</p>            
-            <p style={styles.locationTel}>{data.telnum}</p>  
+            <p style={styles.locationAdress}>{data.address.region} {data.address.detailed} </p>            
+            <p style={styles.locationTel}>{data.telephone}</p>  
             <a type="button" style={styles.bookmarkTag}><img src={data.bookmarkTF ? bookOn : bookOff} style={{width: '48px', height: '48px'}}/></a>          
     </div>
     );

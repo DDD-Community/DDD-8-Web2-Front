@@ -29,6 +29,7 @@ export default function Map({parentFunction,getAccessToken, onReceiveMessage}) {
           markerList = e.data.data.placeInRegionResponses;
           drawMarker();
         }
+        
         // if (e.data &&typeof e.data.type ==='string') {
         //   onReceiveMessage(e.data);
         // }
@@ -95,14 +96,14 @@ const createMarkerImage = (markerSize)=> {
   return markerImage;
   }
   const drawCustomOverlay = () => {
-    markerList.forEach((el, index) => {
+    markerList || [].forEach((el, index) => {
       const content =
         '<span style="position: absolute;width: 15px;height: 14px;left: calc(50% - 15px/2 + 0.5px);top: -25px;font-style: normal;font-weight: 600;font-size: 12px;line-height: 14px;text-align: center;color: #FFFFFF;">' +
         `${index < 9 ? "0" + (index + 1) : index + 1}` +
         "</span>";
       new kakao.maps.CustomOverlay({
         map: map,
-        position: new kakao.maps.LatLng(el.location.latitude, el.location.longitude),
+        // position: new kakao.maps.LatLng(el.location.latitude, el.location.longitude),
         title: el.name,
         content: content,
         // image: markerImage,
@@ -111,7 +112,7 @@ const createMarkerImage = (markerSize)=> {
   };
   const line = new kakao.maps.Polyline();
   const drawLine = () => {
-    for (let idx = 1; idx < markerList.length; idx++) {
+    for (let idx = 1; idx < markerList?.length; idx++) {
       console.log(markerList[idx].location.latitude, markerList[idx].location.longitude);
       const linePath = [
         new kakao.maps.LatLng(markerList[idx - 1].location.latitude, markerList[idx - 1].location.longitude),
