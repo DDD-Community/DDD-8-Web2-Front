@@ -13,7 +13,7 @@ export default function location({ data }) {
     // 앱에 메세지 보내는 방법
   }, []);
   const goLocaionDetail = () => {
-    window.ReacctNativeWebView?.postMessage(
+    window.ReactNativeWebView?.postMessage(
       JSON.stringify({ type: "goLocaionDetail", data: data })
     );
     console.log("postMessage");
@@ -24,18 +24,20 @@ export default function location({ data }) {
       <div onClick={goLocaionDetail} ref={ref} style={styles.locationInfo}>
         <p style={styles.locationInfoTitle}>
           <strong>{data.name}</strong>
-          <span style={styles.locationCatagory}>{data.category}</span>
+          <span style={styles.locationCatagory}>{data.category || ""}</span>
         </p>
         <p style={styles.locationAdress}>
-          {data.address.region} {data.address.detailed}{" "}
+          {data.address.region || ""} {data.address.detailed || ""}{" "}
         </p>
-        <p style={styles.locationTel}>{data.telephone}</p>
-        <a type="button" style={styles.bookmarkTag}>
-          <img
-            src={data.bookmark.activated ? bookOn : bookOff}
-            style={{ width: "48px", height: "48px" }}
-          />
-        </a>
+        <p style={styles.locationTel}>{data.telephone || ""}</p>
+        {data.bookmark && (
+          <a type="button" style={styles.bookmarkTag}>
+            <img
+              src={data.bookmark.activated ? bookOn : bookOff}
+              style={{ width: "48px", height: "48px" }}
+            />
+          </a>
+        )}
       </div>
     );
 }

@@ -9,6 +9,7 @@ const { kakao } = window;
 
 export default function Map({
   parentFunction,
+  searchDataCount,
   getAccessToken,
   onReceiveMessage,
 }) {
@@ -16,15 +17,17 @@ export default function Map({
   const ref = useRef();
   const { pathname } = useLocation();
   let map = null;
-  let mapCenter = { latitude: 37.5666103, longitude: 126.9783882 };
+  let mapCenter = { latitude: 36.3504396, longitude: 127.3849508 };
   let markerList = [];
   let hasNext = false;
+  let searhKeyword = "";
   const imageSrc = pathname === "/schedule" ? simbol_num : recommend_pin;
   const imageSize = new kakao.maps.Size(30, 30);
   let selectedMarker = null;
 
   useEffect(() => {
     if (ref.current) {
+      mapCenter = mapCenter; // postmsg
       mapScript();
       const onMessageHandler = (e) => {
         // 앱으로 부터 온 메세지
@@ -34,15 +37,18 @@ export default function Map({
           typeof e.data.data === "object"
         ) {
           if (e.data.type === "OnResPlacesRegions") {
-            markerList = [...markerList, ...e.data.data.places];
+            markerList = e.data.data.places;
           } else if (e.data.type === "OnResDaySchedulePlaces") {
             markerList = e.data.data.daySchedulePlaces;
           } else if (e.data.type === "OnResPlacesSearch") {
-            markerList = [...markerList, ...e.data.data.thirdPartyModel];
-            hasNext = e.data.data.hasNext;
+            alert(e.data.data.keyword);
+            // searchDataCount(e.data.data.totalCount);
+            searhKeyword !== e.data.data.keyword && mapScript();
+            searhKeyword = e.data.data.keyword;
+            markerList = e.data.data.thirdPartyModel;
+            hasNext = e.data.data.end;
           }
         }
-        mapCenter = mapCenter; // postmsg
         markerList.length && drawMarker();
         if (pathname === "/schedule") {
           drawCustomOverlay();
@@ -77,8 +83,8 @@ export default function Map({
         map: map,
         //마커가 표시 될 위치
         position: new kakao.maps.LatLng(
-          el.location.latitude,
-          el.location.longitude
+          el.location?.latitude || el.latitude,
+          el.location?.longitude || el.longitude
         ),
         //마커에 hover시 나타날 title
         title: el.name,
@@ -158,7 +164,7 @@ export default function Map({
         map: map, // 선을 표시할 지도입니다
         path: linePath, // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
         // path: [clickPosition], // 선을 구성하는 좌표 배열입니다 클릭한 위치를 넣어줍니다
-        strokeWeight: 3, // 선의 두께입니다
+        strokeWeight: 2, // 선의 두께입니다
         strokeColor: "#6147FF", // 선의 색깔입니다
         strokeOpacity: 1, // 선의 불투명도입니다 0에서 1 사이값이며 0에 가까울수록 투명합니다
         strokeStyle: "dash", // 선의 스타일입니다
