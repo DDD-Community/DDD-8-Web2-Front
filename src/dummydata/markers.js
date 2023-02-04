@@ -6,7 +6,7 @@ export const markerList = [
     lng: 127.16017523675508,
     bookmarkTF: false,
     "location":{
-      latitude: 37.62197524055062,
+      latitude: 37.5666103,
       longitude: 127.16017523675508
     }
   },
@@ -135,3 +135,73 @@ export const markerList = [
 //   }
 //   ]
 //   }
+export const sidoLatLng = {
+  서울: {
+    latitude: 37.5666103,
+    longitude: 126.9783882
+  },
+  대전:{
+    latitude: 36.3504396,
+    longitude: 127.3849508
+  },
+  대구: {
+    latitude: 35.87139,
+    longitude: 128.601763
+  },
+  인천 : {
+    latitude: 37.4559418,
+    longitude: 126.7051505
+  },
+  부산: {
+    latitude: 35.179816,
+    longitude: 129.075022
+  },
+  광주: {
+    latitude: 35.160032,
+    longitude: 126.851338
+  },
+  울산 : {
+    latitude: 35.5394773,
+    longitude: 129.3112994
+  },
+  세종: {
+    latitude: 36.4803512,
+    longitude: 127.2894325
+  },
+  제주: {
+    latitude: 33.4273366,
+    longitude: 126.5758344
+  },
+  강원도: {
+    latitude: 37.8603672,
+    longitude: 128.3115261
+  },
+  경기도 : {
+    latitude: 37.4363177,
+    longitude: 127.550802
+  },
+  경상북도 : {
+    latitude: 36.6308397,
+    longitude: 128.962578
+  },
+  경상남도 : {
+    latitude: 35.4414209,
+    longitude: 128.2417453
+  },
+  충청북도 : {
+    latitude: 36.7853718,
+    longitude: 127.6551404
+  },
+  충청남도 : {
+    latitude: 36.6173379,
+    longitude: 126.8453965
+  },
+  전라북도: {
+    latitude: 35.6910153,
+    longitude: 127.2368291
+  },
+  전라남도: {
+    latitude: 34.9007274,
+    longitude: 126.9571667
+  }
+}
