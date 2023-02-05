@@ -46,6 +46,9 @@ export default function Map({
             searhKeyword = e.data.data.keyword;
             markerList = e.data.data.thirdPartyModel;
             // hasNext = e.data.data.pageableCount > 1;
+          } else if (e.data.type === "SetLocation") {
+            mapCenter = e.data.data;
+            mapScript();
           }
         }
         markerList.length && drawMarker();
@@ -75,6 +78,7 @@ export default function Map({
   };
   const drawMarker = () => {
     let marker;
+    let bounds = new kakao.maps.LatLngBounds();
     markerList.forEach((el) => {
       // 마커를 생성합니다
       marker = new kakao.maps.Marker({
@@ -89,6 +93,12 @@ export default function Map({
         title: el.name,
         image: createMarkerImage(imageSize),
       });
+      bounds.extend(
+        new kakao.maps.LatLng(
+          el.location?.latitude || el.latitude,
+          el.location?.longitude || el.longitude
+        )
+      );
       pathname !== "/schedule" &&
         kakao.maps.event.addListener(marker, "click", handler(marker, el));
       function handler(marker, el) {
@@ -114,6 +124,7 @@ export default function Map({
         };
       }
     });
+    map.setBounds(bounds);
   };
   const createMarkerImage = (markerSize) => {
     let markerImage = new kakao.maps.MarkerImage(
