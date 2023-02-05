@@ -41,12 +41,11 @@ export default function Map({
           } else if (e.data.type === "OnResDaySchedulePlaces") {
             markerList = e.data.data.daySchedulePlaces;
           } else if (e.data.type === "OnResPlacesSearch") {
-            alert(e.data.data.keyword);
             // searchDataCount(e.data.data.totalCount);
             searhKeyword !== e.data.data.keyword && mapScript();
             searhKeyword = e.data.data.keyword;
             markerList = e.data.data.thirdPartyModel;
-            hasNext = e.data.data.end;
+            // hasNext = e.data.data.pageableCount > 1;
           }
         }
         markerList.length && drawMarker();
