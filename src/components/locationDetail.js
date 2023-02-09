@@ -12,16 +12,23 @@ export default function location({ data }) {
     // api.getInfo(placeId);
     // 앱에 메세지 보내는 방법
   }, []);
-  const goLocaionDetail = () => {
-    window.ReactNativeWebView?.postMessage(
-      JSON.stringify({ type: "goLocaionDetail", data: data })
-    );
-    console.log("postMessage");
+  const goLocaionDetail = (e) => {
+    if (e.target.tagName === "IMG") {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({ type: "setBookmark", data: { placeId: data?.id } })
+      );
+      console.log(data?.id);
+    } else {
+      window.ReactNativeWebView?.postMessage(
+        JSON.stringify({ type: "goLocaionDetail", data: data })
+      );
+      console.log("goLocaionDetail");
+    }
   };
 
   if (data.name)
     return (
-      <div onClick={goLocaionDetail} ref={ref} style={styles.locationInfo}>
+      <div onClick={goLocaionDetail} ref={ref}>
         <p style={styles.locationInfoTitle}>
           <strong>{data.name}</strong>
           <span style={styles.locationCatagory}>{data.category || ""}</span>
@@ -31,7 +38,7 @@ export default function location({ data }) {
         </p>
         <p style={styles.locationTel}>{data.telephone || ""}</p>
         {data.bookmark && (
-          <a type="button" style={styles.bookmarkTag}>
+          <a type="button" style={styles.bookmarkTag} id="bookmark">
             <img
               src={data.bookmark.activated ? bookOn : bookOff}
               style={{ width: "48px", height: "48px" }}

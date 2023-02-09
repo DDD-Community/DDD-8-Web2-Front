@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import LocationDetail from "../components/locationDetail";
 import Map from "../components/Map.js";
+import { styles } from "../mainStyle.js";
 
 function MapSearch() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [dataCount, setDataCount] = useState(true);
   // const [hasNext, setNext] = useState(true);
   const parentFunction = (location, hasMore) => {
@@ -50,7 +51,11 @@ function MapSearch() {
         검색결과 더보기 {dataCount}
       </button>
       <Map parentFunction={parentFunction} searchDataCount={searchDataCount} />
-      <LocationDetail data={data} />
+      {data && (
+        <div style={styles.locationInfo}>
+          <LocationDetail data={data} />
+        </div>
+      )}
     </div>
   );
   // else
