@@ -39,7 +39,9 @@ export default function Map({
           if (e.data.type === "OnResPlacesRegions") {
             markerList = e.data.data.places;
           } else if (e.data.type === "OnResDaySchedulePlaces") {
-            markerList = e.data.data.daySchedulePlaces.map((v)=>{return v.place});
+            markerList = e.data.data.daySchedulePlaces.map((v) => {
+              return v.place;
+            });
           } else if (e.data.type === "OnResPlacesSearch") {
             // searchDataCount(e.data.data.totalCount);
             searhKeyword !== e.data.data.keyword && mapScript();
@@ -51,7 +53,7 @@ export default function Map({
             mapScript();
           }
         }
-        if(markerList.length){ 
+        if (markerList.length) {
           drawMarker();
           if (pathname === "/schedule") {
             drawCustomOverlay();
@@ -138,7 +140,7 @@ export default function Map({
   const drawCustomOverlay = () => {
     console.log(markerList);
     markerList.forEach((el, index) => {
-      console.log(el)
+      console.log(el);
       const content =
         '<span style="position: relative;width: 13px;height: 14px;left: calc(50% - 13px/2 + 0.5px);top: -17px;font-style: normal;font-weight: 700;font-size: 11px;line-height: 14px;text-align: center;color: #FFFFFF;">' +
         `${index < 9 ? "0" + (index + 1) : index + 1}` +
