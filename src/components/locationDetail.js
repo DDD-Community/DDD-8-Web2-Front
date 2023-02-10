@@ -37,13 +37,12 @@ export default function location({ data }) {
     );
   };
   const goLocaionDetail = (e) => {
-    if (!e.target.tagName === "IMG") {
+
       window.ReactNativeWebView?.postMessage(
-        JSON.stringify({ type: "goLocaionDetail", data: data })
+        JSON.stringify({ type: "goLocationDetail", data: data })
       );
-      console.log("goLocaionDetail");
       console.log(data?.id);
-    }
+
   };
 
   if (data.name)
