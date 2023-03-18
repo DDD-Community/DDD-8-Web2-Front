@@ -40,7 +40,7 @@ function KakaoMap() {
       <Map parentFunction={parentFunction} />
       {/* <Map parentFunction = {parentFunction} onReceiveMessage={handleMessage}/> */}
       {data && (
-        <div style={{ ...styles.locationInfo, ...{ top: "70%" } }}>
+        <div style={{ ...styles.locationInfo }}>
           <LocationDetail data={data} />
         </div>
       )}
