@@ -1,9 +1,9 @@
 const locationInfo = {
   position: "absolute",
   zIndex: 2,
-  width: "343px",
+  width: "calc(100% - 40px)",
   height: "100px",
-  margin: "24px",
+  margin: "20px",
   marginBottom: "96px",
   //   left: "16px",
   //   right: "16px",
