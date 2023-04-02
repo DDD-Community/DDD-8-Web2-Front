@@ -37,20 +37,27 @@ export default function location({ data }) {
     );
   };
   const goLocaionDetail = (e) => {
-
-      window.ReactNativeWebView?.postMessage(
-        JSON.stringify({ type: "goLocationDetail", data: data })
-      );
-      console.log(data?.id);
-
+    window.ReactNativeWebView?.postMessage(
+      JSON.stringify({ type: "goLocationDetail", data: data })
+    );
+    console.log(data?.id);
   };
-
+  const locationCatagory = {
+    CAFE: "카페",
+    RESTAURANT: "음식점",
+    TOURIST_ATTRACTION: "관광명소",
+    ACCOMMODATION: "숙박",
+    MART: "마트",
+    ETC: "기타",
+  };
   if (data.name)
     return (
       <div onClick={goLocaionDetail} ref={ref}>
         <p style={styles.locationInfoTitle}>
           <strong>{data.name}</strong>
-          <span style={styles.locationCatagory}>{data.category || ""}</span>
+          <span style={styles.locationCatagory}>
+            {data.category ? locationCatagory[data.category] : ""}
+          </span>
         </p>
         <p style={styles.locationAdress}>
           {data.address.region || ""} {data.address.detailed || ""}{" "}
